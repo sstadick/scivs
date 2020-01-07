@@ -52,3 +52,4 @@ assert(scailist.find(6, 11).toList(0), Interval(5, 7, 0))
 - Add benchmarks / substantiate the performance characteristics
 - Compare against other libs out there?
 - Add some of the helper methods for things like coverage etc
+- Figure out how to make my package level docs show up in javadoc
