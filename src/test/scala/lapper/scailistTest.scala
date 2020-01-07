@@ -2,21 +2,21 @@ package ivstore
 
 import org.scalatest._
 import interval.Interval
-import lapper.Lapper
+import scailist.ScAIList
 import util.Cursor
 
-object Setup {
-  def nonOverlapping(): Lapper[Int] = {
-    val data = (0 to 100 by 20).map(x => Interval(x, x + 10, 0))
-    new Lapper(data)
+object SetupScAIList {
+  def nonOverlapping(): ScAIList[Int] = {
+    val data = (0 to 1000 by 20).map(x => Interval(x, x + 10, 0))
+    ScAIList(data, 16, true)
   }
 
-  def overlapping(): Lapper[Int] = {
-    val data = (0 to 100 by 10).map(x => Interval(x, x + 15, 0))
-    new Lapper(data)
+  def overlapping(): ScAIList[Int] = {
+    val data = (0 to 1000 by 10).map(x => Interval(x, x + 15, 0))
+    ScAIList(data, 16, true)
   }
 
-  def badLapper(): Lapper[Int] = {
+  def badScAIList(): ScAIList[Int] = {
     val data = List(
       Interval(70, 120, 0), // maxLen = 50
       Interval(10, 15, 0),
@@ -29,16 +29,16 @@ object Setup {
       Interval(68, 71, 0), // overlap start
       Interval(70, 75, 0)
     )
-    new Lapper(data)
+    ScAIList(data)
   }
 
-  def single(): Lapper[Int] = {
+  def single(): ScAIList[Int] = {
     val data = List(Interval(10, 35, 0))
-    new Lapper(data)
+    ScAIList(data, 5)
   }
 }
 
-class LapperSpec extends FlatSpec with Matchers {
+class ScAIListSpec extends FlatSpec with Matchers {
 
   "Intervals" should "overlap" in {
     val iv1 = new Interval(0, 5, true)
@@ -68,58 +68,53 @@ class LapperSpec extends FlatSpec with Matchers {
   }
 
   "Query stop that hits an interval start" should "return no interval" in {
-    val lapper = Setup.nonOverlapping()
-    var cursor = Cursor(0)
+    val lapper = SetupScAIList.nonOverlapping()
     lapper.find(15, 20).hasNext() shouldEqual false
-    lapper.seek(15, 20, cursor).hasNext() shouldEqual false
   }
 
   "Query start that hits an inteval end" should "return no interval" in {
-    val lapper = Setup.nonOverlapping()
-    var cursor = Cursor(0)
+    val lapper = SetupScAIList.nonOverlapping()
     lapper.find(30, 35).hasNext() shouldEqual false
-    lapper.seek(30, 35, cursor).hasNext() shouldEqual false
   }
 
-  "Qeury that overlaps the start of an interval" should "return that interval" in {
-    val lapper = Setup.nonOverlapping()
-    var cursor = Cursor(0)
+  "Query that overlaps the start of an interval" should "return that interval" in {
+    val lapper = SetupScAIList.nonOverlapping()
     val expected = Interval(20, 30, 0)
-    lapper.find(15, 25).next() shouldEqual expected
-    lapper.seek(15, 25, cursor).next() shouldEqual expected
+    val iter = lapper.find(15, 25)
+    iter.hasNext() shouldEqual true
+    iter.next() shouldEqual expected
   }
 
   "Query that overlaps the stop of an interval" should "returns that interval" in {
-    val lapper = Setup.nonOverlapping()
-    var cursor = Cursor(0)
+    val lapper = SetupScAIList.nonOverlapping()
     val expected = Interval(20, 30, 0)
-    lapper.find(25, 35).next() shouldEqual expected
-    lapper.seek(25, 35, cursor).next() shouldEqual expected
+    val iter = lapper.find(25, 35)
+    iter.hasNext() shouldEqual true
+    iter.next() shouldEqual expected
   }
 
   "Query that is enveloped by interval" should "return interval" in {
-    val lapper = Setup.nonOverlapping()
-    var cursor = Cursor(0)
+    val lapper = SetupScAIList.nonOverlapping()
     val expected = Interval(20, 30, 0)
-    lapper.find(22, 27).next() shouldEqual expected
-    lapper.seek(22, 27, cursor).next() shouldEqual expected
+    val iter = lapper.find(22, 27)
+    iter.hasNext() shouldEqual true
+    iter.next() shouldEqual expected
   }
 
   "Query that envelopes an interval" should "return that interval" in {
-    val lapper = Setup.nonOverlapping()
-    var cursor = Cursor(0)
+    val lapper = SetupScAIList.nonOverlapping()
     val expected = Interval(20, 30, 0)
-    lapper.find(15, 35).next() shouldEqual expected
-    lapper.seek(15, 35, cursor).next() shouldEqual expected
+    val iter = lapper.find(15, 35)
+    iter.hasNext() shouldEqual true
+    iter.next() shouldEqual expected
   }
 
   "Query that overlaps multiple intervals" should "return multiple intervals" in {
-    val lapper = Setup.overlapping()
-    var cursor = new Cursor(0)
+    println("Missing intervals")
+    val lapper = SetupScAIList.overlapping()
     val e1 = Interval(0, 15, 0)
     val e2 = Interval(10, 25, 0)
-    List(e1, e2) shouldEqual lapper.find(8, 20).toList
-    List(e1, e2) shouldEqual lapper.seek(8, 20, cursor).toList
+    List(e1, e2).sorted shouldEqual lapper.find(8, 20).toList.sorted
   }
 
   "Query overlaps in large intervals" should "return overlapped intervals" in {
@@ -140,7 +135,7 @@ class LapperSpec extends FlatSpec with Matchers {
       Interval(150, 200, 0)
     )
 
-    val lapper = new Lapper(data)
+    val lapper = ScAIList(data)
     val found1 = lapper.find(8, 11).toList
     found1 shouldEqual List(
       Interval(1, 10, 0),
@@ -156,20 +151,8 @@ class LapperSpec extends FlatSpec with Matchers {
     )
   }
 
-  "Seeking past the end of the intervals" should "not cause IndexOutOfBounds" in {
-    val lapper = Setup.nonOverlapping()
-    var cursor = new Cursor(0)
-    val single = Setup.single()
-
-    for (interval <- lapper.intervals) {
-      for (o_interval <- single.seek(interval.start, interval.stop, cursor)) {
-        println(cursor)
-      }
-    }
-  }
-
   "Query that is pre first match" should "still return the match" in {
-    val lapper = Setup.badLapper()
+    val lapper = SetupScAIList.badScAIList()
     val e1 = Interval(50, 55, 0)
     val iter = lapper.find(50, 55)
     iter.hasNext() // hasNext MUST be called to advance the cursor to the first match
@@ -187,7 +170,7 @@ class LapperSpec extends FlatSpec with Matchers {
       Interval(27959118, 27959171, 0),
       Interval(28866309, 33141404, 0)
     )
-    val lapper = new Lapper(data)
+    val lapper = ScAIList(data)
     val found = lapper.find(28974798, 33141355).toList
     found shouldEqual List(Interval(28866309, 33141404, 0))
   }
