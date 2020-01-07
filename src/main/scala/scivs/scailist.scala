@@ -15,14 +15,14 @@
   *  other intervals with a certain distance from it. The unique development in
   *  this implementation is to make the cap dynamic.
   */
-package ivstore.scailist
+package scivs.scailist
 import scala.util.control.Breaks._
 import scala.collection.AbstractIterator
 import scala.collection.mutable.ArrayBuffer
 import scala.math
-import ivstore.util.Cursor
-import ivstore.ivstore.IVStore
-import ivstore.interval.Interval
+import scivs.util.Cursor
+import scivs.scivs.Scivs
+import scivs.interval.Interval
 
 /** Companion object for the ScAIList class. Implements the primary constructor */
 object ScAIList {
@@ -116,8 +116,8 @@ object ScAIList {
 /** ScAIList represents a decomposed list of intervals ordered by start position.
   *  @example
   *  {{{
-  *  import ivstore.scailist.ScAIList
-  *  import ivstore.interval.Interval
+  *  import scivs.scailist.ScAIList
+  *  import scivs.interval.Interval
   *  val lapper = ScAIList((0 to 20 by 5).map(Interval(_, _ + 2, 0)).toList))
   *  assert(lapper.find(6, 11).toList(0), Interval(5, 7, 0))
   *  }}}
@@ -128,7 +128,7 @@ case class ScAIList[T](
     compLens: ArrayBuffer[Int],
     compIdxs: ArrayBuffer[Int],
     maxEnds: ArrayBuffer[Int]
-) extends IVStore[T, ScAIListIter[T]] {
+) extends Scivs[T, ScAIListIter[T]] {
 
   def length(): Int = this.intervals.length
   def isEmpty(): Boolean = this.intervals.isEmpty
@@ -165,7 +165,7 @@ case class ScAIList[T](
       Some(left)
   }
 
-  /** Returns an iterator over [[ivstore.interval.Interval]] that overlap the
+  /** Returns an iterator over [[scivs.interval.Interval]] that overlap the
     *  query `start until end`
     */
   def find(start: Int, stop: Int): ScAIListIter[T] = {

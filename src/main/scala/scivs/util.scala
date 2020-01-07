@@ -1,4 +1,4 @@
-package ivstore.util
+package scivs.util
 
 /**
   *  A simple wrapper object over an integer to allow for passing a reference to

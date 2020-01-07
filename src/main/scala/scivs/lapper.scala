@@ -4,26 +4,26 @@
   *
   *  Lapper works well for most interval data that does not include very long
   *  long intervals that engulf a majority of other intervals. In typical genomic
-  *  data it is very fast. If you have lots of nested intervals see [[ivstore.scailist]].
+  *  data it is very fast. If you have lots of nested intervals see [[scivs.scailist]].
   */
-package ivstore.lapper
+package scivs.lapper
 //import scala.math.{min, max}
 import scala.util.control.Breaks._
 import scala.collection.AbstractIterator
-import ivstore.interval.Interval
-import ivstore.ivstore.IVStore
-import ivstore.util.Cursor
+import scivs.interval.Interval
+import scivs.scivs.Scivs
+import scivs.util.Cursor
 
 /** Lapper represents a list of intervals ordered by start position.
   *  @example
   *  {{{
-  *  import ivstore.lapper.Lapper
-  *  import ivstore.interval.Interval
+  *  import scivs.lapper.Lapper
+  *  import scivs.interval.Interval
   *  val lapper = new Lapper((0 to 20 by 5).map(Interval(_, _ + 2, 0)).toList))
   *  assert(lapper.find(6, 11).toList(0), Interval(5, 7, 0))
   *  }}}
   */
-class Lapper[T](ivs: Seq[Interval[T]]) extends IVStore[T, LapperIter[T]] {
+class Lapper[T](ivs: Seq[Interval[T]]) extends Scivs[T, LapperIter[T]] {
   val intervals = ivs.sorted
   private val starts = intervals.map(_.start)
   private val stops = intervals.map(_.stop)
@@ -50,7 +50,7 @@ class Lapper[T](ivs: Seq[Interval[T]]) extends IVStore[T, LapperIter[T]] {
     low
   }
 
-  /** Return an iterator of [[ivstore.interval.Interval]] that overlap the query
+  /** Return an iterator of [[scivs.interval.Interval]] that overlap the query
     *  `start until stop`.
     */
   def find(start: Int, stop: Int): LapperIter[T] = {
@@ -58,8 +58,8 @@ class Lapper[T](ivs: Seq[Interval[T]]) extends IVStore[T, LapperIter[T]] {
     new LapperIter(this, start, stop, cursor)
   }
 
-  /** Return an iterator of [[ivstore.interval.Interval]] that overlap the query
-    *  `start until stop`. Accepts an [[ivstore.util.Cursor]] to allow for fast
+  /** Return an iterator of [[scivs.interval.Interval]] that overlap the query
+    *  `start until stop`. Accepts an [[scivs.util.Cursor]] to allow for fast
     *  sequential queries
     */
   def seek(start: Int, stop: Int, cursor: Cursor): LapperIter[T] = {

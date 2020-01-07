@@ -1,8 +1,8 @@
 /** Provides class for representing an Interval
   *  ==Overview==
-  *  The main class to use is [[ivstore.interval.Interval]]
+  *  The main class to use is [[scivs.interval.Interval]]
   */
-package ivstore.interval
+package scivs.interval
 import scala.math.{min, max}
 
 /** An Interval that is start inclusive
