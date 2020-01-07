@@ -1,3 +1,5 @@
+[![Latest version](https://index.scala-lang.org/<organization>/<repository>/<artifact>/latest.svg)](https://index.scala-lang.org/<organization>/<repository>/<artifact>)
+
 # scivs 
 
 This is a library containing Classes and helpers for working with
