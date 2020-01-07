@@ -1,4 +1,4 @@
-[![Latest version](https://index.scala-lang.org/<organization>/<repository>/<artifact>/latest.svg)](https://index.scala-lang.org/<organization>/<repository>/<artifact>)
+[![Latest version](https://index.scala-lang.org/sstadick/scivs/scivs/latest.svg)](https://index.scala-lang.org/<organization>/<repository>/<artifact>)
 
 # scivs 
 

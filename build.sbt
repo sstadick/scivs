@@ -14,26 +14,29 @@ ThisBuild / scmInfo := Some(
 
 ThisBuild / developers := List(
   Developer(
-    id = "sstadick" name = "Seth Stadick" email = "sstadick@gmail.com" url =
-      "https://github.com/sstadick"
+    id = "sstadick",
+    name = "Seth Stadick",
+    email = "sstadick@gmail.com",
+    url = url("https://github.com/sstadick")
   )
 )
 
+// Sonatype build
+useGpg := true
 ThisBuild / description := "Collection of datastructures for working with genomic intervals"
 ThisBuild / homepage := Some(url("https://github.com/sstadick/scivs"))
 ThisBuild / pomIncludeRepository := { _ =>
   false
 }
+
+ThisBuild / publishMavenStyle := true
 ThisBuild / publishTo := {
-  val nexus = "https://oss.sonatype.org"
+  val nexus = "https://oss.sonatype.org/"
   if (isSnapshot.value)
     Some("snapshots" at nexus + "content/repositories/snapshots")
-  else Some("releases" at nexus + "service/local/staging/deploy/maven2")
+  else
+    Some("releases" at nexus + "service/local/staging/deploy/maven2")
 }
-ThisBuild / publishMavenStyle := true
-
-// Sonatype build
-useGpg := true
 
 lazy val root = (project in file("."))
   .settings(
