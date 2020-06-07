@@ -46,6 +46,10 @@ class LapperSpec extends FlatSpec with Matchers {
     iv1.overlap(iv2) shouldEqual true
   }
 
+  "Fail" should "Fail" in {
+    1 shouldEqual 2
+  }
+
   "Intervals" should "intersect" in {
     val i1 = Interval(70, 120, 0) // maxLen = 50
     val i2 = Interval(10, 15, 0)
