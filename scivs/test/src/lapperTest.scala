@@ -1,6 +1,7 @@
 package scivs
 
-import org.scalatest._
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 import interval.Interval
 import lapper.Lapper
 import util.Cursor
@@ -38,16 +39,12 @@ object Setup {
   }
 }
 
-class LapperSpec extends FlatSpec with Matchers {
+class LapperSpec extends AnyFlatSpec with Matchers {
 
   "Intervals" should "overlap" in {
     val iv1 = new Interval(0, 5, true)
     val iv2 = new Interval(3, 6, true)
     iv1.overlap(iv2) shouldEqual true
-  }
-
-  "Fail" should "Fail" in {
-    1 shouldEqual 2
   }
 
   "Intervals" should "intersect" in {
@@ -165,9 +162,10 @@ class LapperSpec extends FlatSpec with Matchers {
     var cursor = new Cursor(0)
     val single = Setup.single()
 
+    var counter = 0
     for (interval <- lapper.intervals) {
       for (o_interval <- single.seek(interval.start, interval.stop, cursor)) {
-        println(cursor)
+        counter += 1
       }
     }
   }

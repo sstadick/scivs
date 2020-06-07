@@ -110,7 +110,6 @@ class ScAIListSpec extends FlatSpec with Matchers {
   }
 
   "Query that overlaps multiple intervals" should "return multiple intervals" in {
-    println("Missing intervals")
     val lapper = SetupScAIList.overlapping()
     val e1 = Interval(0, 15, 0)
     val e2 = Interval(10, 25, 0)
