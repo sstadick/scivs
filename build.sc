@@ -1,10 +1,8 @@
 // build.sc
 import mill._, scalalib._, publish._
 
-object scivs extends ScalaModule with PublishModule {
+trait CommonModule extends ScalaModule {
   def scalaVersion = "2.13.1"
-  def publishVersion = "0.1.1"
-
   object test extends Tests {
     def ivyDeps =
       Agg(
@@ -13,6 +11,16 @@ object scivs extends ScalaModule with PublishModule {
       )
     def testFrameworks = Seq("org.scalatest.tools.Framework")
   }
+
+}
+
+object interval_tools extends ScalaModule with CommonModule {
+  def publishVersion = "0.1.0"
+  def moduleDeps = Seq(scivs)
+}
+
+object scivs extends ScalaModule with PublishModule with CommonModule {
+  def publishVersion = "0.1.1"
 
   def pomSettings = PomSettings(
     description =
