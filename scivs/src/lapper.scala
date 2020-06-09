@@ -23,12 +23,9 @@ import scivs.util.Cursor
   *  assert(lapper.find(6, 11).toList(0), Interval(5, 7, 0))
   *  }}}
   */
-class Lapper[T](ivs: Seq[Interval[T]]) extends Scivs[T, LapperIter[T]] {
+class Lapper[T](ivs: Array[Interval[T]]) extends Scivs[T, LapperIter[T]] {
   val intervals = ivs.sorted
-  private val starts = intervals.map(_.start)
-  private val stops = intervals.map(_.stop)
   private val maxLen = intervals.map(iv => iv.stop - iv.start).max
-  private val cursor = 0
 
   def length(): Int = this.intervals.length
   def isEmpty(): Boolean = this.intervals.isEmpty

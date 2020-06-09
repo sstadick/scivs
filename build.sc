@@ -14,7 +14,7 @@ trait CommonModule extends ScalaModule {
 
 }
 
-object interval_tools extends ScalaModule with CommonModule {
+object ivtools extends ScalaModule with CommonModule {
   def publishVersion = "0.1.0"
   def moduleDeps = Seq(scivs)
 }

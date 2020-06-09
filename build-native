@@ -3,5 +3,7 @@
 # Build a GraalVM native-image from the assembly jar. Requires:
 # Coursier: https://get-coursier.io/
 # GraalVM native-image: gu install native-image
-mill interval_tools.assembly
-native-image -cp $(cs fetch --classpath org.scala-lang:scala-library:2.13.1):$(pwd) --no-fallback --initialize-at-build-time -jar ./out/interval_tools/assembly/dest/out.jar ivtools
+mill ivtools.assembly
+mkdir -p ./out/ivtools/native/dest/
+rm ./out/ivtools/native/dest/ivtools
+native-image -cp $(cs fetch --classpath org.scala-lang:scala-library:2.13.1):$(pwd) --no-fallback --initialize-at-build-time -jar ./out/ivtools/assembly/dest/out.jar ./out/ivtools/native/dest/ivtools

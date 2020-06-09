@@ -8,17 +8,17 @@ import util.Cursor
 
 object Setup {
   def nonOverlapping(): Lapper[Int] = {
-    val data = (0 to 100 by 20).map(x => Interval(x, x + 10, 0))
+    val data = (0 to 100 by 20).map(x => Interval(x, x + 10, 0)).toArray
     new Lapper(data)
   }
 
   def overlapping(): Lapper[Int] = {
-    val data = (0 to 100 by 10).map(x => Interval(x, x + 15, 0))
+    val data = (0 to 100 by 10).map(x => Interval(x, x + 15, 0)).toArray
     new Lapper(data)
   }
 
   def badLapper(): Lapper[Int] = {
-    val data = List(
+    val data = Array(
       Interval(70, 120, 0), // maxLen = 50
       Interval(10, 15, 0),
       Interval(10, 15, 0), // exact overlap
@@ -34,7 +34,7 @@ object Setup {
   }
 
   def single(): Lapper[Int] = {
-    val data = List(Interval(10, 35, 0))
+    val data = Array(Interval(10, 35, 0))
     new Lapper(data)
   }
 }
@@ -124,7 +124,7 @@ class LapperSpec extends AnyFlatSpec with Matchers {
   }
 
   "Query overlaps in large intervals" should "return overlapped intervals" in {
-    val data = List(
+    val data = Array(
       Interval(0, 8, 0),
       Interval(1, 10, 0),
       Interval(2, 5, 0),
@@ -180,7 +180,7 @@ class LapperSpec extends AnyFlatSpec with Matchers {
   }
 
   "When there is a very long interval that spans many little intervals, the little intervals" should "still be returned" in {
-    val data = List(
+    val data = Array(
       Interval(25264912, 25264986, 0),
       Interval(27273024, 27273065, 0),
       Interval(27440273, 27440318, 0),
